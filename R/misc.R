@@ -32,7 +32,7 @@ tr <- function(A){
 }
 
 
-# check if a vector is sorted from:
+# check if a vector is sorted in both orders from:
 # https://stackoverflow.com/questions/23547929/determine-if-a-vector-is-ordered
 is.sorted <- function(x, ...) {
   
