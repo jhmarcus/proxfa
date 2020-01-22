@@ -17,6 +17,7 @@ non_negative_prox_fn <- function(A, lower=1e-8){
   A[A<=lower] <- lower
 
   return(A)
+  
 }
 
 
