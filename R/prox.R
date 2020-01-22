@@ -1,4 +1,6 @@
 
+
+# project on to box constraint
 box_prox_fn <- function(A, lower=1e-8, upper=1-1e-8){
   
   A[A<=lower] <- lower
@@ -9,6 +11,7 @@ box_prox_fn <- function(A, lower=1e-8, upper=1-1e-8){
 }
 
 
+# project onto non-negative constraint
 non_negative_prox_fn <- function(A, lower=1e-8){
   
   A[A<=lower] <- lower
@@ -17,6 +20,7 @@ non_negative_prox_fn <- function(A, lower=1e-8){
 }
 
 
+# project onto simplex constraint for each row
 row_simplex_prox_fn <- function(A){
   
   n <- nrow(A)
@@ -29,6 +33,7 @@ row_simplex_prox_fn <- function(A){
 }
 
 
+# project onto simplex constraint for each column
 col_simplex_prox_fn <- function(A){
   
   n <- ncol(A)
@@ -41,6 +46,7 @@ col_simplex_prox_fn <- function(A){
 }
 
 
+# no constraint
 identity_prox_fn <- function(A){
   
   return(A)

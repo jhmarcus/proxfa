@@ -1,4 +1,5 @@
 
+
 # update the loadings with a gradient step either
 # with a fixed step-size or line-search
 loadings_update <- function(f){
@@ -10,14 +11,15 @@ loadings_update <- function(f){
     gradL <- -p * (Omega %*% (S %*% OmegaLD) - OmegaLD)   
     
     if(fix_step_size==TRUE){
-      
+    
+      # gradient-step for fixed step-size  
       L <- prox_fn(L - step_size * gradL)
       
     } else {
       
-      # TODO: double check line-search 
-      # 
+      # gradiient-step using backtracing line-search
       # adapted from: https://www.stat.cmu.edu/~ryantibs/convexopt-S15/lectures/08-prox-grad.pdf
+      # TODO: double check 
       t <- step_size
       line_search <- TRUE
       loss_old <- comp_neg_loglik(tau, S, I_n, L, D)
@@ -89,6 +91,7 @@ prior_variance_update <- function(f, q){
   }))
 }
 
+
 # update the residual precision using Brents method
 residual_precision_update <- function(f, upper=20.0){
   return(within(f, {
@@ -108,6 +111,7 @@ residual_precision_update <- function(f, upper=20.0){
     
   }))
 }
+
 
 # update the mean for all the features at once and then recompute the 
 # sample covariance matrix after removing the mean taking advatage of 

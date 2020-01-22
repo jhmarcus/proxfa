@@ -1,6 +1,5 @@
 
 
-
 #' @title Proximal gradient descent for factor analysis
 #'
 #' @description This function computes maximum likelihood estimates of the parameters in a 
