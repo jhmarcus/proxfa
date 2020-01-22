@@ -5,9 +5,10 @@
 \title{Proximal gradient descent for factor analysis}
 \usage{
 proxfa(Y, L, D, mu, tau, step_size, step_size_shrink = 0.5,
-  max_iter = 100, max_inner_iter = 20, tol = 0.001,
-  inner_tol = 0.001, n_print = 10, prox_fn = function(L) {     L },
-  eps = 1e-08, fix_D = FALSE, fix_mu = FALSE, fix_tau = FALSE)
+  max_iter = 500, max_inner_iter = 20, tol = 0.001,
+  inner_tol = 0.001, n_print = 10, prox_fn = identity_prox_fn,
+  eps = 1e-08, fix_D = FALSE, fix_mu = FALSE, fix_tau = FALSE,
+  fix_step_size = FALSE)
 }
 \arguments{
 \item{Y}{is the n x p data matrix with no missing entries}
@@ -49,10 +50,27 @@ by default is is the identity}
 \item{fix_mu}{is a boolean to update the means}
 
 \item{fix_tau}{is a boolean to update the residual precision}
+
+\item{fix_step_size}{is a boolean to fix the step size rather than line search}
 }
 \value{
 returns a list with fitted values
 }
 \description{
-IN PROGRESS
+This function computes maximum likelihood estimates of the parameters in a 
+ factor analysis model with constraints on the loadings. The model can be motivated 
+ by the following generative factor analysis model:
+ 
+   f_j ~ N(0, D)
+   y_j | f_j ~ N(\mu_j1 + Lf_j, \tau^{-1}I)
+ 
+ Here y_j is the data, f_j are called latent factors and L are sample loadings on to these factors. 
+ We consider the case where L has some constraint, such as non-negativity, and our goal is to 
+ estimate L by maximum likelihood, in addition to other fixed parameters. Typically models 
+ like this are fit fit using an EM algorithim. Here we take a direct approach and marginalize 
+ out the latent factors:
+ 
+   y_j ~ N(\mu_j1, LDL^T + \tau^{-1}I) 
+ 
+ We then optimize marginal likelihood using alternating optimization and proximal gradient descent.
 }

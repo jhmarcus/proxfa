@@ -1,4 +1,6 @@
 
+
+# used for computing low-rank inverse
 comp_kinv <- function(tau, L, D){
   
   Dinv <- solve_diag(D)
@@ -9,7 +11,8 @@ comp_kinv <- function(tau, L, D){
 }
 
 
-compute_loss <- function(tau, S, I, L, D){
+# compute the negative log-likelihood taking avantage of low-rank structure
+comp_neg_loglik <- function(tau, S, I, L, D){
   
   Kinv <- comp_kinv(tau, L, D)
   KinvLt <- Kinv %*% t(L)
@@ -23,5 +26,3 @@ compute_loss <- function(tau, S, I, L, D){
   return(loss)
   
 }
-
-

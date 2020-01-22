@@ -1,4 +1,6 @@
 
+# update the loadings with a gradient step either
+# with a fixed step-size or line-search
 loadings_update <- function(f){
   return(within(f, {
     
@@ -7,28 +9,45 @@ loadings_update <- function(f){
     OmegaLD <- Omega %*% L %*% D
     gradL <- -p * (Omega %*% (S %*% OmegaLD) - OmegaLD)   
     
-    # line search
-    t <- step_size
-    line_search <- TRUE
-    loss_old <- compute_loss(tau, S, I_n, L, D)
-    while(line_search){
+    if(fix_step_size==TRUE){
       
-      # generalized gradient
-      G <- (L - prox_fn(L - t * gradL)) / t
+      L <- prox_fn(L - step_size * gradL)
       
-      # compute losses      
-      loss_new <- compute_loss(tau, S, I_n, L - t * G, D)
+    } else {
       
-      # compute criteria
-      tr <- t * tr(t(gradL) %*% G)
-      l2 <- .5 * t * sum(G^2)
-      crt <- loss_new > (loss_old - tr + l2)
-      if(crt){
-        t <- step_size_shrink * t
-      } else {
-        L <- prox_fn(L - t * gradL)
-        line_search <- FALSE
+      # TODO: double check line-search 
+      # 
+      # adapted from: https://www.stat.cmu.edu/~ryantibs/convexopt-S15/lectures/08-prox-grad.pdf
+      t <- step_size
+      line_search <- TRUE
+      loss_old <- comp_neg_loglik(tau, S, I_n, L, D)
+      while(line_search){
+        
+        # generalized gradient
+        G <- (L - prox_fn(L - t * gradL)) / t
+        
+        # compute losses      
+        loss_new <- comp_neg_loglik(tau, S, I_n, L - t * G, D)
+        
+        # compute criteria
+        tr <- t * tr(t(gradL) %*% G)
+        l2 <- .5 * t * sum(G^2)
+        crt <- loss_new > (loss_old - tr + l2)
+        if(crt){
+          t <- step_size_shrink * t
+        } else {
+          L <- prox_fn(L - t * gradL)
+          line_search <- FALSE
+        }
       }
+      
+      rm(line_search)
+      rm(loss_old)
+      rm(loss_new)
+      rm(G)
+      rm(tr)
+      rm(l2)
+      rm(crt)
       
     }
     
@@ -36,17 +55,12 @@ loadings_update <- function(f){
     rm(Omega)
     rm(OmegaLD)
     rm(gradL)
-    rm(line_search)
-    rm(loss_old)
-    rm(loss_new)
-    rm(G)
-    rm(tr)
-    rm(l2)
-    rm(crt)
-    
+
   }))
 }
 
+
+# update the qth prior variance holding the other factors fixed 
 prior_variance_update <- function(f, q){
   return(within(f, {
     
@@ -75,10 +89,11 @@ prior_variance_update <- function(f, q){
   }))
 }
 
-residual_precision_update <- function(f, upper=10.0){
+# update the residual precision using Brents method
+residual_precision_update <- function(f, upper=20.0){
   return(within(f, {
     
-    opt <- optim(tau, compute_loss, 
+    opt <- optim(tau, comp_neg_loglik, 
                  method="Brent", 
                  lower=eps, 
                  upper=upper,
@@ -94,14 +109,16 @@ residual_precision_update <- function(f, upper=10.0){
   }))
 }
 
+# update the mean for all the features at once and then recompute the 
+# sample covariance matrix after removing the mean taking advatage of 
+# low rank structure 
 mean_update <- function(f){
   return(within(f, {
     
     Kinv <- comp_kinv(tau, L, D)
     Omega <- (tau * I_n) - (tau^2 * L) %*% Kinv %*% t(L)
     Omega_ones <- Omega %*% ones_n
-    
-    mu <- (t(Y) %*% Omega_ones) / (t(ones_n) %*% Omega_ones)
+    mu <- as.vector(t(Y) %*% Omega_ones / drop(t(ones_n) %*% Omega_ones))
     S <- comp_samp_cov_wmean(YYt, Y, mu, ones_n)
     
   }))
