@@ -22,14 +22,14 @@ loadings_update <- function(f){
       # TODO: double check 
       t <- step_size
       line_search <- TRUE
-      loss_old <- comp_neg_loglik(tau, S, I_n, L, D)
+      loss_old <- comp_neg_loglik(tau, S, I_n, L, D, p)
       while(line_search){
         
         # generalized gradient
         G <- (L - prox_fn(L - t * gradL)) / t
         
         # compute losses      
-        loss_new <- comp_neg_loglik(tau, S, I_n, L - t * G, D)
+        loss_new <- comp_neg_loglik(tau, S, I_n, L - t * G, D, p)
         
         # compute criteria
         tr <- t * tr(t(gradL) %*% G)
@@ -100,7 +100,7 @@ residual_precision_update <- function(f, upper=20.0){
                  method="Brent", 
                  lower=eps, 
                  upper=upper,
-                 S=S, I=I_n, L=L, D=D)
+                 S=S, I=I_n, L=L, D=D, p=p)
     tau <- opt$par
     
     if(opt$convergence != 0){

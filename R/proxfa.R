@@ -96,7 +96,7 @@ proxfa <- function(Y, L, D, mu, tau,
       
   # setup loss      
   loss = rep(NA, max_iter+1)
-  loss[1] <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D)
+  loss[1] <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D, f$p)
   for(i in 2:(max_iter+1)){
     
     ########## loadings update ########## 
@@ -105,7 +105,7 @@ proxfa <- function(Y, L, D, mu, tau,
     # gradient descent
     for(m in 1:max_inner_iter){
       f <- loadings_update(f)  
-      inner_loss <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D)
+      inner_loss <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D, f$p)
       delta <- last_inner_loss - inner_loss
       
       # check convergence
@@ -134,7 +134,7 @@ proxfa <- function(Y, L, D, mu, tau,
     }
     
     ########## check convergence ########## 
-    loss[i] <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D)
+    loss[i] <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D, f$p)
     delta <- loss[i-1] - loss[i] # should be positve if loss decreasing
     
     # print an update

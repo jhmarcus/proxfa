@@ -12,7 +12,7 @@ comp_kinv <- function(tau, L, D){
 
 
 # compute the negative log-likelihood taking avantage of low-rank structure
-comp_neg_loglik <- function(tau, S, I, L, D){
+comp_neg_loglik <- function(tau, S, I, L, D, p){
   
   Kinv <- comp_kinv(tau, L, D)
   KinvLt <- Kinv %*% t(L)
