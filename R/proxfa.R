@@ -152,7 +152,6 @@ proxfa <- function(Y, L, D, mu, tau,
       f <- add_convergence_info(f, loss, i)
       return(f)
     }
-    
   }
   
   f <- add_convergence_info(f, loss, i)
