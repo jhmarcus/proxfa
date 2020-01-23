@@ -3,7 +3,6 @@ library(MASS)
 
 test_that(paste("the low-rank approach to computing the inverse covariance",
                 "is close to the brute force approach"),  {
-       
   n <- 40            
   Q = 5
   p <- 500
@@ -19,13 +18,11 @@ test_that(paste("the low-rank approach to computing the inverse covariance",
   Omega_low_rank <- (tau * I_n) - (tau^2 * L) %*% Kinv %*% t(L)
   
   expect_equal(Omega_brute, Omega_low_rank, tolerance = 1e-8)
-  
 })
 
 
 test_that(paste("the low-rank approach to computing the negative-log-likelihood",
                 "is close to the brute force approach"),  {
-  
   n <- 40            
   Q = 5
   p <- 500
@@ -43,5 +40,4 @@ test_that(paste("the low-rank approach to computing the negative-log-likelihood"
   low_rank_nll <- comp_neg_loglik(tau, S, I, L, D, p)
   
   expect_equal(low_rank_nll, brute_force_nll, tolerance = 1e-8)
-                  
 })
