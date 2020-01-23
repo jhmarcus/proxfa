@@ -96,7 +96,8 @@ prior_variance_update <- function(f, q){
 residual_precision_update <- function(f, upper=20.0){
   return(within(f, {
     
-    opt <- optim(tau, comp_neg_loglik, 
+    opt <- optim(par=tau, 
+                 fn=comp_neg_loglik, 
                  method="Brent", 
                  lower=eps, 
                  upper=upper,

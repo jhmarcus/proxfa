@@ -139,18 +139,23 @@ proxfa <- function(Y, L, D, mu, tau,
     
     # print an update
     if(i %% n_print == 0){
+      
       msg <- paste0("iteration=", i, 
                     " | loss=", loss[i], 
                     " | delta=", delta, 
                     " | m=", m, 
                     " | last_t=", f$t)
       print(msg)
+      
     }
     
     # check convergence
     if(delta <= tol){
+      
       f <- add_convergence_info(f, loss, i)
+      
       return(f)
+      
     }
   }
   
