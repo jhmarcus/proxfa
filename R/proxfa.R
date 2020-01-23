@@ -102,7 +102,7 @@ proxfa <- function(Y, L, D, mu, tau,
     ########## loadings update ########## 
     last_inner_loss <- loss[1]
     
-    # gradient descent
+    # proximal gradient descent
     for(m in 1:max_inner_iter){
       f <- loadings_update(f)  
       inner_loss <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D, f$p)
