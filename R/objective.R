@@ -23,6 +23,6 @@ comp_neg_loglik <- function(tau, S, I, L, D, p){
   logdet <- log(det(Omega))
   neg_loglik <- (p / 2.0) * (tr - logdet)
   
-  return(negloglik)
+  return(neg_loglik)
   
 }
