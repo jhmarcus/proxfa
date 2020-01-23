@@ -1,6 +1,6 @@
 Package: proxfa
 Title: Proximal Gradient Methods for Fitting Factor Analysis with Constraints 
-Version: 0.0.0.0
+Version: 0.0.0.1
 Authors@R: 
     person(given = "Joe",
            family = "Marcus",
