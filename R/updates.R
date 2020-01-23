@@ -17,7 +17,7 @@ loadings_update <- function(f){
       
     } else {
       
-      # gradiient-step using backtracing line-search
+      # gradient-step using backtracking line-search
       # adapted from: https://www.stat.cmu.edu/~ryantibs/convexopt-S15/lectures/08-prox-grad.pdf
       # TODO: double check 
       t <- step_size
@@ -36,10 +36,14 @@ loadings_update <- function(f){
         l2 <- .5 * t * sum(G^2)
         crt <- loss_new > (loss_old - tr + l2)
         if(crt){
+          
           t <- step_size_shrink * t
+          
         } else {
+          
           L <- prox_fn(L - t * gradL)
           line_search <- FALSE
+          
         }
       }
       
@@ -72,13 +76,17 @@ prior_variance_update <- function(f, q){
     l <- L[, q]
     u <- Einv %*% l
     
-    # names from Tipping and Faul 2003
+    # naming adopted from Tipping and Faul 2003
     sparsity <- t(l) %*% u
     quality <- tr((S %*% u) %*% t(u))
     if(quality >= sparsity){
+      
       D[q, q] <- (quality - sparsity) / (sparsity^2)
+      
     } else {
+      
       D[q, q] <- eps
+      
     }
     
     rm(l)
@@ -102,6 +110,7 @@ residual_precision_update <- function(f, upper=20.0){
                  lower=eps, 
                  upper=upper,
                  S=S, I=I_n, L=L, D=D, p=p)
+    
     tau <- opt$par
     
     if(opt$convergence != 0){
