@@ -45,6 +45,7 @@ loadings_update <- function(f){
           line_search <- FALSE
           
         }
+        
       }
       
       rm(line_search)
@@ -114,7 +115,9 @@ residual_precision_update <- function(f, upper=20.0){
     tau <- opt$par
     
     if(opt$convergence != 0){
+      
       stop("residual variance update did not converge")        
+      
     }
     
     rm(opt)
