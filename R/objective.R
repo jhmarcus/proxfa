@@ -21,8 +21,8 @@ comp_neg_loglik <- function(tau, S, I, L, D, p){
   
   tr <- tr(SOmega)
   logdet <- log(det(Omega))
-  loss <- (p / 2.0) * (tr - logdet)
+  neg_loglik <- (p / 2.0) * (tr - logdet)
   
-  return(loss)
+  return(negloglik)
   
 }
