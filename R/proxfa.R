@@ -77,9 +77,7 @@ proxfa <- function(Y, L, D, mu, tau,
   n_factors <- ncol(L) # number of factors
   
   if(n_factors <=2 && fix_D ==FALSE){
-    
     stop("D updates not implemented for Q <= 2")
-    
   }
   
   ones_n <- rep(1, n)
@@ -106,47 +104,33 @@ proxfa <- function(Y, L, D, mu, tau,
     
     # gradient descent
     for(m in 1:max_inner_iter){
-      
       f <- loadings_update(f)  
       inner_loss <- comp_neg_loglik(f$tau, f$S, f$I_n, f$L, f$D, f$p)
       delta <- last_inner_loss - inner_loss
       
       # check convergence
       if(delta <= inner_tol){
-        
         break 
-        
       } else{
-        
         last_inner_loss <- inner_loss  
-        
       }
-      
     }
     
     ########## prior variance update ########## 
     if(!fix_D){
-      
       for(q in 1:n_factors){
-        
         f <- prior_variance_update(f, q)
-        
       }
-      
     }
 
     ########## residual precision update ########## 
     if(!fix_tau){
-      
       f <- residual_precision_update(f)
-      
     }
 
     ########## mean update ########## 
     if(!fix_mu){
-      
       f <- mean_update(f)
-      
     }
     
     ########## check convergence ########## 
@@ -155,30 +139,23 @@ proxfa <- function(Y, L, D, mu, tau,
     
     # print an update
     if(i %% n_print == 0){
-      
       msg <- paste0("iteration=", i, 
                     " | loss=", loss[i], 
                     " | delta=", delta, 
                     " | m=", m, 
                     " | last_t=", f$t)
-      
       print(msg)
-      
     }
     
     # check convergence
     if(delta <= tol){
-      
       f <- add_convergence_info(f, loss, i)
-      
       return(f)
-      
     }
     
   }
   
   f <- add_convergence_info(f, loss, i)
-  
   return(f)
   
 }
